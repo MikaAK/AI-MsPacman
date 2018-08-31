@@ -17,13 +17,14 @@ class ConvNeuralNetwork(NN.Module):
     def __init__(self, num_actions):
         super(ConvNeuralNetwork, self).__init__()
 
-        self.conv_layer_1 = create_conv_network(1, 32, 5)
-        self.conv_layer_2 = create_conv_network(32, 64, 3)
+        self.conv_layer_1 = create_conv_network(1, 128, 7)
+        self.conv_layer_2 = create_conv_network(128, 64, 5)
         self.conv_layer_3 = create_conv_network(64, 64, 2)
 
         num_neurons = self.count_neurons((1, 63, 48))
-        self.neural_hidden_layer_1 = create_full_connection(num_neurons, 1024)
-        self.neural_hidden_layer_2 = create_full_connection(1024, 512)
+        self.neural_hidden_layer_1 = create_full_connection(num_neurons, 2048)
+        self.neural_hidden_layer_2 = create_full_connection(2048, 1024)
+        self.neural_hidden_layer_3 = create_full_connection(1024, 512)
         self.neural_output_layer = create_full_connection(512 , num_actions)
 
     def count_neurons(self, image_dim):
@@ -42,6 +43,7 @@ class ConvNeuralNetwork(NN.Module):
         x = x.view(x.size(0), -1)
         x = Functional.relu(self.neural_hidden_layer_1(x))
         x = Functional.relu(self.neural_hidden_layer_2(x))
+        x = Functional.relu(self.neural_hidden_layer_3(x))
         output_neurons = self.neural_output_layer(x)
 
         return output_neurons

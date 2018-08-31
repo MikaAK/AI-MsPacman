@@ -21,7 +21,7 @@ conv_network = ConvNeuralNetwork(number_actions)
 softmax_body = SoftmaxBody(tempurature = 1.0)
 ai = AI(brain = conv_network, body = softmax_body)
 
-nstep_progress = NStepProgress(env = env, ai = ai, n_step = 10)
+nstep_progress = NStepProgress(env = env, ai = ai, n_step = 20)
 replay_memory = ReplayMemory(n_steps = nstep_progress, capacity = 10000)
 moving_avg = MovingAvg(size = 100)
 
