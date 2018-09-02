@@ -18,17 +18,17 @@ number_actions = env.action_space.n
 env.reset()
 
 conv_network = ConvNeuralNetwork(number_actions)
-softmax_body = SoftmaxBody(tempurature = 1.0)
+softmax_body = SoftmaxBody(tempurature = 8.0)
 ai = AI(brain = conv_network, body = softmax_body)
 
-nstep_progress = NStepProgress(env = env, ai = ai, n_step = 20)
+nstep_progress = NStepProgress(env = env, ai = ai, n_step = 15)
 replay_memory = ReplayMemory(n_steps = nstep_progress, capacity = 10000)
-moving_avg = MovingAvg(size = 100)
+moving_avg = MovingAvg(size = 200)
 
 loss = NN.MSELoss()
 optimizer = Optim.Adam(conv_network.parameters(), lr = 0.001)
 
-run_count = 100
+run_count = 10000
 
 for run_num in range(1, run_count + 1):
     replay_memory.run_steps(200)

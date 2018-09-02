@@ -18,7 +18,7 @@ class PreprocessImage(ObservationWrapper):
         self.grayscale = grayscale
         self.crop = crop
         n_colors = 1 if self.grayscale else 3
-        self.observation_space = Box(0.0, 1.0, [n_colors, height, width])
+        self.observation_space = Box(0.0, 1.0, [n_colors, height, width], dtype = np.float32)
 
     def observation(self, img):
         img = self.crop(img)
