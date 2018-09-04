@@ -168,3 +168,4 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/python,linux,osx
 videos/
+save.pth.tar

@@ -1,8 +1,6 @@
-import sys
 import gym
 import torch.nn as NN
 import torch.optim as Optim
-from torch.autograd import Variable
 from ai import AI
 from conv_neural_network import ConvNeuralNetwork
 from softmax_body import SoftmaxBody
@@ -10,6 +8,8 @@ from experience_replay import NStepProgress, ReplayMemory
 from moving_avg import MovingAvg
 from eligibility_trace import eligibility_trace
 from image_preprocessing import PreprocessImage, create_wrapped_env
+from persistance import save_brain, has_save_file, load_brain
+from train_ai import train_ai
 
 wrapped_env = create_wrapped_env('MsPacman-v0')
 env = PreprocessImage(env = wrapped_env, height = 63, width = 48, grayscale = True)
@@ -18,7 +18,7 @@ number_actions = env.action_space.n
 env.reset()
 
 conv_network = ConvNeuralNetwork(number_actions)
-softmax_body = SoftmaxBody(tempurature = 8.0)
+softmax_body = SoftmaxBody(tempurature = 1.0)
 ai = AI(brain = conv_network, body = softmax_body)
 
 nstep_progress = NStepProgress(env = env, ai = ai, n_step = 15)
@@ -28,27 +28,19 @@ moving_avg = MovingAvg(size = 200)
 loss = NN.MSELoss()
 optimizer = Optim.Adam(conv_network.parameters(), lr = 0.001)
 
+if (has_save_file()):
+    start_epoch = load_brain(conv_network, optimizer, nstep_progress, moving_avg)
+else:
+    start_epoch = 1
+
 run_count = 10000
 
-for run_num in range(1, run_count + 1):
-    replay_memory.run_steps(200)
-
-    for batch in replay_memory.sample_batch(128):
-        inputs, targets = eligibility_trace(conv_network, batch)
-        inputs, targets = Variable(inputs), Variable(targets)
-        predictions = conv_network(inputs)
-        loss_error = loss(predictions, targets)
-
-        optimizer.zero_grad()
-        loss_error.backward()
-        optimizer.step()
-
-    rewards_steps = nstep_progress.rewards_steps()
-
-    moving_avg.add(rewards_steps)
-
-    avg_reward = moving_avg.average()
-
-    print("Run: %s, Average Reward: %s" % (str(run_num), str(avg_reward)))
+train_ai(
+    nstep_progress,
+    moving_avg, eligibility_trace,
+    save_brain, optimizer,
+    loss, start_epoch, run_count,
+    replay_memory, conv_network
+)
 
 env.close()
