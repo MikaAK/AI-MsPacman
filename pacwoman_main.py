@@ -18,15 +18,15 @@ number_actions = env.action_space.n
 env.reset()
 
 conv_network = ConvNeuralNetwork(number_actions)
-softmax_body = SoftmaxBody(tempurature = 1.0)
+softmax_body = SoftmaxBody(tempurature = .99)
 ai = AI(brain = conv_network, body = softmax_body)
 
-nstep_progress = NStepProgress(env = env, ai = ai, n_step = 15)
-replay_memory = ReplayMemory(n_steps = nstep_progress, capacity = 10000)
+nstep_progress = NStepProgress(env = env, ai = ai, n_step = 10)
+replay_memory = ReplayMemory(n_steps = nstep_progress, capacity = 1000000)
 moving_avg = MovingAvg(size = 200)
 
 loss = NN.MSELoss()
-optimizer = Optim.Adam(conv_network.parameters(), lr = 0.001)
+optimizer = Optim.Adam(conv_network.parameters(), lr = 0.00025)
 
 if (has_save_file()):
     start_epoch = load_brain(conv_network, optimizer, nstep_progress, moving_avg)

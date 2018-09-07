@@ -42,7 +42,7 @@ class NStepProgress:
                 state = self.env.reset()
                 history.clear()
 
-    def initilize_rewards(rewards):
+    def initilize_rewards(self, rewards):
         self.rewards = rewards
 
     def rewards_steps(self):

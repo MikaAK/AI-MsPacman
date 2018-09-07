@@ -36,4 +36,10 @@ def create_wrapped_env(
 ):
     skip_wrapper = SkipWrapper(skip_count)
 
-    return skip_wrapper(Monitor(make(game_name), "./videosv2/", force = True, video_callable=video_callable_episode_id))
+    return skip_wrapper(Monitor(
+        make(game_name),
+        "./videosv2/",
+        mode = 'training',
+        resume = True,
+        video_callable = video_callable_episode_id
+    ))
