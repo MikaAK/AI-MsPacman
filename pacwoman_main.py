@@ -1,4 +1,6 @@
-import gym
+from nes_py.wrappers import BinarySpaceToDiscreteSpaceEnv
+import gym_super_mario_bros
+from gym_super_mario_bros.actions import RIGHT_ONLY
 import torch.nn as NN
 import torch.optim as Optim
 from ai import AI
@@ -11,8 +13,12 @@ from image_preprocessing import PreprocessImage, create_wrapped_env
 from persistance import save_brain, has_save_file, load_brain
 from train_ai import train_ai
 
-wrapped_env = create_wrapped_env('MsPacman-v0')
-env = PreprocessImage(env = wrapped_env, height = 63, width = 48, grayscale = True)
+env = gym_super_mario_bros.make('SuperMarioBros-v3')
+env = BinarySpaceToDiscreteSpaceEnv(env, RIGHT_ONLY)
+
+wrapped_env = create_wrapped_env(env, output_path = "./video")
+
+env = PreprocessImage(env = wrapped_env, height = 60, width = 64, grayscale = True)
 number_actions = env.action_space.n
 
 env.reset()

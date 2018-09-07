@@ -19,7 +19,7 @@ def load_brain(conv_network, optimizer, nstep_progress, moving_avg):
     checkpoint = torch.load(save_file)
 
     conv_network.load_state_dict(checkpoint['state_dict'])
-    conv_network.load_state_dict(checkpoint['optimizer'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
     moving_avg.initilize_rewards_history(checkpoint['moving_avg'])
     nstep_progress.initilize_rewards(checkpoint['nstep_rewards'])
 

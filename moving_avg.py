@@ -5,7 +5,7 @@ class MovingAvg:
         self.rewards_history = []
         self.size = size
 
-    def initilize_rewards_history(rewards_history):
+    def initilize_rewards_history(self, rewards_history):
         self.rewards_history = rewards_history
 
     def add(self, rewards):

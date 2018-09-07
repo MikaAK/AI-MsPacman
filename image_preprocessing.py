@@ -1,5 +1,4 @@
 # Image Preprocessing
-
 # Importing the libraries
 import numpy as np
 from scipy.misc import imresize
@@ -30,10 +29,11 @@ class PreprocessImage(ObservationWrapper):
         return img
 
 def create_wrapped_env(
-    game_name,
+    game,
+    output_path = "./videosv2/",
     skip_count = 4,
     video_callable_episode_id = lambda episode_id: episode_id % 1 == 0
 ):
     skip_wrapper = SkipWrapper(skip_count)
 
-    return skip_wrapper(Monitor(make(game_name), "./videosv2/", force = True, video_callable=video_callable_episode_id))
+    return skip_wrapper(Monitor(game, output_path, force = True, video_callable=video_callable_episode_id))
